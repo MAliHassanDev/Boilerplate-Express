@@ -1,5 +1,3 @@
-import * as string_decoder from "node:string_decoder";
-
 export type CreatedSuccessCode = "created";
 
 export type OkSuccessCode = "ok";

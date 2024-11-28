@@ -1,4 +1,4 @@
-import {response, Response} from "express";
+import {Response} from "express";
 import {
   API_RESPONSE_MESSAGES,
   ApiResponseCode,
@@ -7,7 +7,7 @@ import {
   InternalServerErrorCode,
   NotFoundErrorCode, OkSuccessCode,
   UnAuthorizedErrorCode
-} from "@/utils/apiResponseMessages";
+} from "./apiResponseMessages.js";
 
 type ResponseStatus = "success" | "fail" | "error";
 
@@ -108,7 +108,7 @@ class ApiResponse {
   public internalError(
     res: Response,
     code: InternalServerErrorCode = "internalError",
-    message: string = API_RESPONSE_MESSAGES.internalServerError["internalError"],
+    message: string = API_RESPONSE_MESSAGES.internalServerError[code],
   ) {
     const responseBody: ResponseBody = {
       status: "error",

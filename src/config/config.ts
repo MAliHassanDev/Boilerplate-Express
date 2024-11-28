@@ -1,3 +1,10 @@
+import logger from "./logger.js";
+import dotenv from "dotenv";
+import {join} from "path";
+
+dotenv.config({
+  path: join(import.meta.dirname, "..", "..", ".env")
+})
 type NodeEnv = "DEV" | "TEST" | "PROD";
 
 interface ServerConfig {
@@ -5,17 +12,23 @@ interface ServerConfig {
   host: string;
 }
 
+interface DatabaseConfig {
+  connectionString: string,
+  name: string,
+}
+
+
 interface Configs {
   serverConfig?: ServerConfig;
+  databaseConfig?: DatabaseConfig;
 }
 
 class Config {
-  private configs: Configs;
+  private readonly configs: Configs = {};
   private readonly env: NodeEnv;
   private static instance: Config;
 
   private constructor() {
-    this.configs = {};
     this.env = this.getEnv("NODE_ENV", "DEV").toUpperCase() as NodeEnv;
   }
 
@@ -28,21 +41,45 @@ class Config {
     }
   }
 
+  private initializeDatabaseConfig() {
+    if (!this.configs.databaseConfig) {
+      this.configs.databaseConfig = {
+        name: this.getEnv("DATABASE_NAME", "myDb"),
+        connectionString: this.getEnv(
+          "DATABASE_URI", "mongodb://localhost:27017")
+      };
+    }
+  }
+
   private getIntEnv(name: string, defaultValue: number) {
     const value = process.env[`${name}_${this.env}`] || process.env[name];
-    return value ? parseInt(value, 10) : defaultValue;
+    if (!value) {
+      logger.warn(
+        `Env '${name}' not defined. Using default value '${defaultValue}'`,
+        "Config"
+      );
+      return defaultValue;
+    }
+    return parseInt(value, 10);
   }
 
   private getEnv(name: string, defaultValue: string) {
     const value = process.env[`${name}_${this.env}`] || process.env[name];
-    return value || defaultValue;
+    if (!value) {
+      logger.warn(
+        `Env '${name}' not defined. Using default value '${defaultValue}'`,
+        "Config"
+      );
+      return defaultValue;
+    }
+    return value;
   }
 
-  private getConfig(name: keyof Configs) {
+  private getConfig<T extends Configs[keyof Configs]>(name: keyof Configs): T {
     const config = this.configs[name];
     if (!config)
       throw new Error(`Following config is not initialized: ${name}`);
-    return config;
+    return config as T;
   }
 
   public static getInstance(): Config {
@@ -55,6 +92,11 @@ class Config {
   public getServerConfig(): ServerConfig {
     this.initializeServerConfig();
     return this.getConfig("serverConfig");
+  }
+
+  public getDatabaseConfig(): DatabaseConfig {
+    this.initializeDatabaseConfig();
+    return this.getConfig("databaseConfig");
   }
 
   public getNodeEnv() {
