@@ -1,11 +1,16 @@
-import config from "@/config/config.js";
-
 type Level = {
   error: 0;
   warn: 1;
   info: 2;
   debug: 3;
 };
+
+type Context = string | null;
+
+interface LoggerOptions {
+  level: keyof Level;
+  errorStack?: boolean;
+}
 
 class Logger {
   private readonly levels: Level = {
@@ -17,25 +22,37 @@ class Logger {
 
   private readonly levelColorCodes: Record<keyof Level, number> = {
     error: 31,
-    warn: 38,
+    warn: 93,
     info: 32,
-    debug: 34,
+    debug: 35,
   };
-  constructor(private readonly level: keyof Level) {}
 
-  private log(level: keyof Level, message: string, data: unknown[]) {
+  private readonly level: keyof Level;
+
+  private readonly errorStack: boolean;
+
+  constructor(options: LoggerOptions) {
+    this.level = options.level;
+    this.errorStack = options.errorStack || false;
+  }
+
+  private log(level: keyof Level, message: unknown, context: Context) {
     const currentLevelIndex = this.levels[level];
     const setLevelIndex = this.levels[this.level];
 
-    if (
-      config.getNodeEnv() !== "PROD" &&
-      currentLevelIndex <= setLevelIndex
-    ) {
-      const customMessage = `${this.getTimeStamp()} \x1B[${
-        this.levelColorCodes[level]
-      }m${level}\x1B[0m: ${message}`;
-      console.log(customMessage, ...data);
-    }
+    const shouldLog =
+      process.env.NODE_ENV !== "PROD" && currentLevelIndex <= setLevelIndex;
+
+    if (!shouldLog) return;
+
+    const colorCode = this.levelColorCodes[level];
+    const isError = message instanceof Error && this.errorStack;
+
+    const logHeader = `${this.getTimeStamp()} \x1B[${colorCode};1;1m${level}:\x1B[0m`;
+    const logContext = context ? ` [${context}]` : "";
+    const logMessage = isError ? message.stack?.slice(7) : message // slice is for string "Error:" at start of stack;
+
+    console.log(`${logHeader}${logContext} ${logMessage}`);
   }
 
   private getTimeStamp() {
@@ -51,21 +68,22 @@ class Logger {
     }:${minutes}:${seconds}`;
   }
 
-  info(message: string, ...data: unknown[]) {
-    this.log("info", message, data);
+  info(message: string, context: Context = null) {
+    this.log("info", message, context);
   }
 
-  error(message: string, ...data: unknown[]) {
-    this.log("error", message, data);
+  error(message: unknown, context: Context = null) {
+    this.log("error", message, context);
   }
 
-  warn(message: string, ...data: unknown[]) {
-    this.log("warn", message, data);
+  warn(message: string, context: Context = null) {
+    this.log("warn", message, context);
   }
 
-  debug(message: string, ...data: unknown[]) {
-    this.log("debug", message, data);
+  debug(message: string, context: Context = null) {
+    this.log("debug", message, context);
   }
 }
 
-export default new Logger("info");
+export default new Logger({level: "info", errorStack: true});
+
