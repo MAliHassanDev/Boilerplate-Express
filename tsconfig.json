@@ -1,14 +1,39 @@
 {
   "compilerOptions": {
+    /* ------------------------------------ Environment ------------------------------- */
+    // target version of javascript
     "target": "ES6",
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    // Ensures every non-declaration file is treated as module
     "moduleDetection": "force",
-    "paths": {
-      "@/*" : ["./src/*"],
-    }
+    /* -------------------------------------- Bundler --------------------------------*/
+    "lib": ["ES2022.Error"],
+    // sets the module system for the program
+    "module": "nodeNext",
+    /*
+       picks the right algorithm for module resolution based on whether Node.js will see an import or require
+       in emitted js. (nodeNext or  node16) requires file extensions in imports.
+    */
+    "moduleResolution": "nodeNext",
+    // makes transformation  es6 imports to commandJs and vice versa compatible
+    "esModuleInterop": true,
+    // forces consistent file names between files on disk and newly created program files
+    "forceConsistentCasingInFileNames": true,
+    // source directory for emitted files
+    "outDir": "build",
+    /* ---------------------------------------- Linting ------------------------------- */
+    // enables strict type checking
+    "strict": true,
+    // reports errors on unused local variables
+    "noUnusedLocals": true,
+    // reports errors on unused  parameters
+    "noUnusedParameters": true,
+    // Ensures that any non-empty case inside a switch statement includes either break, return, or throw.
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
