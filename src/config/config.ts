@@ -1,22 +1,25 @@
 import logger from "./logger.js";
 import dotenv from "dotenv";
-import {join} from "path";
+import { join } from "path";
 
 dotenv.config({
-  path: join(import.meta.dirname, "..", "..", ".env")
-})
+  path: join(import.meta.dirname, "..", "..", ".env"),
+});
+
 type NodeEnv = "DEV" | "TEST" | "PROD";
+
+type Env = string | number;
 
 interface ServerConfig {
   port: number;
   host: string;
 }
 
-interface DatabaseConfig {
-  connectionString: string,
-  name: string,
-}
 
+interface DatabaseConfig {
+  connectionString: string;
+  name: string;
+}
 
 interface Configs {
   serverConfig?: ServerConfig;
@@ -29,13 +32,17 @@ class Config {
   private static instance: Config;
 
   private constructor() {
-    this.env = this.getEnv("NODE_ENV", "DEV").toUpperCase() as NodeEnv;
+    this.env = this.getEnv<string>("NODE_ENV", "DEV", [
+      "DEV",
+      "PROD",
+      "TEST",
+    ]).toUpperCase() as NodeEnv;
   }
 
   private initializeServerConfig() {
     if (!this.configs.serverConfig) {
       this.configs.serverConfig = {
-        port: this.getIntEnv("PORT", 3000),
+        port: this.getEnv("PORT", 3000),
         host: this.getEnv("HOST", "127.0.0.1"),
       };
     }
@@ -46,12 +53,18 @@ class Config {
       this.configs.databaseConfig = {
         name: this.getEnv("DATABASE_NAME", "myDb"),
         connectionString: this.getEnv(
-          "DATABASE_URI", "mongodb://localhost:27017")
+          "DATABASE_URI",
+          "mongodb://localhost:27017"
+        ),
       };
     }
   }
 
-  private getIntEnv(name: string, defaultValue: number) {
+  private getEnv<T extends Env>(
+    name: string,
+    defaultValue: T,
+    expectedValues?: Array<Env>
+  ):T {
     const value = process.env[`${name}_${this.env}`] || process.env[name];
     if (!value) {
       logger.warn(
@@ -60,19 +73,16 @@ class Config {
       );
       return defaultValue;
     }
-    return parseInt(value, 10);
-  }
-
-  private getEnv(name: string, defaultValue: string) {
-    const value = process.env[`${name}_${this.env}`] || process.env[name];
-    if (!value) {
-      logger.warn(
-        `Env '${name}' not defined. Using default value '${defaultValue}'`,
-        "Config"
+    if (expectedValues) {
+      const isValueInExpected = expectedValues.some(
+        (expectedValue) => expectedValue === value
       );
-      return defaultValue;
+      if (!isValueInExpected)
+        throw new Error(
+          `Value of Env '${name}' is different from the expected value '${expectedValues}'`
+        );
     }
-    return value;
+    return typeof defaultValue === "number" ? parseInt(value,10) as T: value as T;
   }
 
   private getConfig<T extends Configs[keyof Configs]>(name: keyof Configs): T {
