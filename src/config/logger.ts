@@ -50,7 +50,7 @@ class Logger {
 
     const logHeader = `${this.getTimeStamp()} \x1B[${colorCode};1;1m${level}:\x1B[0m`;
     const logContext = context ? ` [${context}]` : "";
-    const logMessage = isError ? message.stack?.slice(7) : message // slice is for string "Error:" at start of stack;
+    const logMessage = isError ? message.stack : message 
 
     console.log(`${logHeader}${logContext} ${logMessage}`);
   }
