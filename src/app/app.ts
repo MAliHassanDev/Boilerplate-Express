@@ -1,5 +1,6 @@
-import express, {Express} from "express";
+import express, {Express,Response,Request } from "express";
 import compression from "compression";
+import apiResponse from "../utils/apiResponse.js";
 
 
 const app: Express = express();
@@ -18,6 +19,9 @@ app.use(compression());
 
 
 // assign routes
+app.all("*", (_,res: Response) => {
+  apiResponse.ok(res,{"Time": new Date().toISOString()});
+})
 
 
 export default app;
