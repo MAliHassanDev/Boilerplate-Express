@@ -43,7 +43,7 @@ class Server {
   }
 
   private getServerInstance(): Promise<http.Server> {
-    return new Promise((res, _) => {
+    return new Promise((res) => {
       const server = this.app.listen(
         this.serverConfig.port,
         this.serverConfig.host,
@@ -73,23 +73,26 @@ class Server {
     if (server) await server.shutdown();
   }
 
-  process.on("uncaughtException", async (error: Error) => {
-    logger.error(error,"Uncaught");
-    if (server) await server.shutdown();
+  process.on("uncaughtException", (error: Error) => {
+    logger.error(error, "Uncaught");
+    if (server) server.shutdown().catch(logger.error);
   });
 
-  process.on("SIGINT", async (signal: NodeJS.Signals) => {
-    logger.info(`Received ${signal} signal.`)
-    if (server) await server.shutdown();
+  process.on("SIGINT", (signal: NodeJS.Signals) => {
+    logger.info(`Received ${signal} signal.`);
+    if (server) server.shutdown().catch(logger.error);
   });
 
-  process.on("SIGTERM", async (signal:NodeJS.Signals) => {
-    logger.info(`Received ${signal} signal.`)
-    if (server) await server.shutdown();
-  })
+  process.on("SIGTERM", (signal: NodeJS.Signals) => {
+    logger.info(`Received ${signal} signal.`);
+    if (server) server.shutdown().catch(logger.error);
+  });
 
-  process.on("unhandledRejection", async (reason:string,promise:Promise<unknown>) => {
-    logger.error(`Unhandled Promise: ${promise}. Reason: ${reason}`);
-    if (server) await server.shutdown();
-  })
+  process.on(
+    "unhandledRejection",
+    (reason: string,) => {
+      logger.error(`Unhandled Promise: ${reason}.`);
+      if (server) server.shutdown().catch(logger.error);
+    }
+  );
 })().catch(logger.error);

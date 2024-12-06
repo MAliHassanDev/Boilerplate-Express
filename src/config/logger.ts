@@ -1,4 +1,5 @@
-type Level = {
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+interface Level {
   error: 0;
   warn: 1;
   info: 2;
@@ -50,7 +51,7 @@ class Logger {
 
     const logHeader = `${this.getTimeStamp()} \x1B[${colorCode};1;1m${level}:\x1B[0m`;
     const logContext = context ? ` [${context}]` : "";
-    const logMessage = isError ? message.stack : message 
+    const logMessage = isError ? message.stack : message;
 
     console.log(`${logHeader}${logContext} ${logMessage}`);
   }
@@ -68,22 +69,21 @@ class Logger {
     }:${minutes}:${seconds}`;
   }
 
-  info(message: string, context: Context = null) {
+  public info = (message: string, context: Context = null) => {
     this.log("info", message, context);
-  }
+  };
 
-  error(message: unknown, context: Context = null) {
+  public error = (message: unknown, context: Context = null) => {
     this.log("error", message, context);
-  }
+  };
 
-  warn(message: string, context: Context = null) {
+  public warn = (message: string, context: Context = null) => {
     this.log("warn", message, context);
-  }
+  };
 
-  debug(message: string, context: Context = null) {
+  public debug = (message: string, context: Context = null) => {
     this.log("debug", message, context);
-  }
+  };
 }
 
-export default new Logger({level: "info", errorStack: true});
-
+export default new Logger({ level: "info", errorStack: true });
