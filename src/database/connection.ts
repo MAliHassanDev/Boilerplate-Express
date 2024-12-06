@@ -1,16 +1,14 @@
-import config from "../config/config.js";
 import mongoose from "mongoose";
-
+import config from "../config/config.js";
 
 class Database {
   private static instance: Database;
-  private name:string;
+  private name: string;
   private connectionString: string;
 
   public constructor() {
-    const {name, connectionString} = config.getDatabaseConfig();
-    this.name = name,
-      this.connectionString = connectionString;
+    const { name, connectionString } = config.getDatabaseConfig();
+    (this.name = name), (this.connectionString = connectionString);
   }
 
   public static getInstance() {
@@ -22,8 +20,8 @@ class Database {
 
   public async connect() {
     await mongoose.connect(this.connectionString, {
-      dbName: this.name
-    })
+      dbName: this.name,
+    });
   }
 
   public async disconnect() {
@@ -31,6 +29,4 @@ class Database {
   }
 }
 
-
-export default Database.getInstance();
-
+export default Database;

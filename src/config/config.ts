@@ -1,22 +1,20 @@
 import logger from "./logger.js";
 import dotenv from "dotenv";
 import { join } from "path";
+import { NodeEnv } from "../server.js";
 
 dotenv.config({
   path: join(import.meta.dirname, "..", "..", ".env"),
 });
 
-type NodeEnv = "DEV" | "TEST" | "PROD";
-
 type Env = string | number;
 
-interface ServerConfig {
+export interface ServerConfig {
   port: number;
   host: string;
 }
 
-
-interface DatabaseConfig {
+export interface DatabaseConfig {
   connectionString: string;
   name: string;
 }
@@ -64,7 +62,7 @@ class Config {
     name: string,
     defaultValue: T,
     expectedValues?: Array<Env>
-  ):T {
+  ): T {
     const value = process.env[`${name}_${this.env}`] || process.env[name];
     if (!value) {
       logger.warn(
@@ -78,11 +76,14 @@ class Config {
         (expectedValue) => expectedValue === value
       );
       if (!isValueInExpected)
-        throw new Error(
-          `Value of Env '${name}' is different from the expected value '${expectedValues}'`
+        logger.warn(
+          `Value of Env '${name}' is different from the expected value '${expectedValues}'.Using Default value '${defaultValue}'`,
+          "Config"
         );
     }
-    return typeof defaultValue === "number" ? parseInt(value,10) as T: value as T;
+    return typeof defaultValue === "number"
+      ? (parseInt(value, 10) as T)
+      : (value as T);
   }
 
   private getConfig<T extends Configs[keyof Configs]>(name: keyof Configs): T {
