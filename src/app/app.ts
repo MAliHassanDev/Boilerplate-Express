@@ -1,6 +1,7 @@
 import express, { Express, Response } from "express";
 import compression from "compression";
 import apiResponse from "../utils/apiResponse.js";
+import errorHandler from "../middlewares/errorHandler.js";
 
 const app: Express = express();
 
@@ -21,6 +22,7 @@ app.all("*", (_, res: Response) => {
   apiResponse.ok(res, { Time: new Date().toISOString() });
 });
 
-
+// respond to unhandled api errors
+app.use(errorHandler);
 
 export default app;
