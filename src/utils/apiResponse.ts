@@ -1,34 +1,27 @@
-import {Response} from "express";
+import { Response } from "express";
 import {
   API_RESPONSE_MESSAGES,
   ApiResponseCode,
   BadRequestErrorCode,
   CreatedSuccessCode,
   InternalServerErrorCode,
-  NotFoundErrorCode, OkSuccessCode,
-  UnAuthorizedErrorCode
+  NotFoundErrorCode,
+  OkSuccessCode,
+  UnAuthorizedErrorCode,
 } from "./apiResponseMessages.js";
 
 type ResponseStatus = "success" | "fail" | "error";
 
+type ResponseData = Record<string, unknown>;
 
-interface ResponseBody {
+export interface ResponseBody {
   status: ResponseStatus;
   code: ApiResponseCode;
   message: string;
   data: ResponseData | null;
 }
 
-interface ResponseData {
-  [key: string]: string | number | Array<string | number>;
-}
-
 class ApiResponse {
-
-  public constructor() {
-  }
-
-
   public ok(
     res: Response,
     data: ResponseData,
@@ -40,7 +33,7 @@ class ApiResponse {
       code: "OK",
       message,
       data,
-    }
+    };
     res.status(200).json(responseBody);
   }
 
@@ -57,7 +50,7 @@ class ApiResponse {
       status: "fail",
       message,
       code: "UNAUTHORIZED",
-      data: null
+      data: null,
     };
     res.status(401).json(responseBody);
   }
@@ -71,8 +64,8 @@ class ApiResponse {
       status: "fail",
       code: "NOT_FOUND",
       message,
-      data: null
-    }
+      data: null,
+    };
     res.status(404).json(responseBody);
   }
 
@@ -87,42 +80,37 @@ class ApiResponse {
       code: "CREATED",
       message,
       data,
-    }
+    };
     res.status(201).json(responseBody);
   }
 
   public badRequest(
     res: Response,
     code: BadRequestErrorCode = "badRequest",
-    message: string = API_RESPONSE_MESSAGES.badRequest[code],
+    message: string = API_RESPONSE_MESSAGES.badRequest[code]
   ) {
     const responseBody: ResponseBody = {
       status: "fail",
       code: "BAD_REQUEST",
       message,
-      data: null
-    }
+      data: null,
+    };
     res.status(400).json(responseBody);
   }
 
   public internalError(
     res: Response,
     code: InternalServerErrorCode = "internalError",
-    message: string = API_RESPONSE_MESSAGES.internalServerError[code],
+    message: string = API_RESPONSE_MESSAGES.internalServerError[code]
   ) {
     const responseBody: ResponseBody = {
       status: "error",
       code: "INTERNAL_SERVER_ERROR",
       message,
-      data: null
-    }
+      data: null,
+    };
     res.status(500).json(responseBody);
   }
 }
 
 export default new ApiResponse();
-
-
-
-
-
