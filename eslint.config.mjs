@@ -17,7 +17,7 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["eslint.config.mjs", "build/**", "**/*.mjs", "**/*.js"],
+    ignores: ["build/**", "**/*.mjs", "**/*.js","**/*.config.ts"],
   },
   {
     files: ["**/*.js"],
