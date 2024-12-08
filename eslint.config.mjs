@@ -15,6 +15,9 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    rules: {
+      "@typescript-eslint/restrict-template-expressions": ["error",{"allowNumber":true}]
+    }
   },
   {
     ignores: ["build/**", "**/*.mjs", "**/*.js","**/*.config.ts"],
@@ -22,5 +25,6 @@ export default tseslint.config(
   {
     files: ["**/*.js"],
     extends: [tseslint.configs.disableTypeChecked],
-  }
+  },
+  
 );
