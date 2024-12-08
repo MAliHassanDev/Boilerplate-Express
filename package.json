@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "tsx watch ./src/server.ts",
     "preview": "node ./build/server.js",
-    "eslint": "eslint .",
+    "lint": "eslint .",
     "test": "jest"
   },
   "keywords": [],
