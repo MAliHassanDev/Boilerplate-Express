@@ -4,9 +4,10 @@
   "main": "./src/server.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "dev": "tsx watch ./src/server.ts",
     "preview": "node ./build/server.js",
+    "pre-push": "npm run lint && npm run test && npm run build",
     "lint": "eslint .",
     "test": "jest"
   },
