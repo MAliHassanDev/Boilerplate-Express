@@ -1,19 +1,21 @@
 import mongoose from "mongoose";
-import config from "../config/config.js";
+import config, { DatabaseConfig } from "../config/config.js";
 
 class Database {
   private static instance: Database;
   private name: string;
   private connectionString: string;
 
-  public constructor() {
-    const { name, connectionString } = config.getDatabaseConfig();
-    (this.name = name), (this.connectionString = connectionString);
+  private constructor(databaseConfig:DatabaseConfig) {
+    this.name = databaseConfig.name;
+    this.connectionString = databaseConfig.connectionString
   }
 
   public static getInstance() {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!Database.instance) {
-      Database.instance = new Database();
+      const database = config.getDatabaseConfig();
+      Database.instance = new Database(database);
     }
     return Database.instance;
   }

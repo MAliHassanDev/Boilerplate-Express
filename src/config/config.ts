@@ -63,7 +63,7 @@ class Config {
     defaultValue: T,
     expectedValues?: Array<Env>
   ): T {
-    const value = process.env[`${name}_${this.env}`] || process.env[name];
+    const value = process.env[`${name}_${this.env}`] ?? process.env[name];
     if (!value) {
       logger.warn(
         `Env '${name}' not defined. Using default value '${defaultValue}'`,
@@ -77,7 +77,7 @@ class Config {
       );
       if (!isValueInExpected)
         logger.warn(
-          `Value of Env '${name}' is different from the expected value '${expectedValues}'.Using Default value '${defaultValue}'`,
+          `Value of Env '${name}' is different from the expected value '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
           "Config"
         );
     }
@@ -86,6 +86,7 @@ class Config {
       : (value as T);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   private getConfig<T extends Configs[keyof Configs]>(name: keyof Configs): T {
     const config = this.configs[name];
     if (!config)
@@ -94,6 +95,7 @@ class Config {
   }
 
   public static getInstance(): Config {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!Config.instance) {
       Config.instance = new Config();
     }

@@ -16,7 +16,8 @@ export default tseslint.config(
       },
     },
     rules: {
-      "@typescript-eslint/restrict-template-expressions": ["error",{"allowNumber":true}]
+      "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],
+      "@typescript-eslint/array-type": ["error",{"default": "generic"}]
     }
   },
   {

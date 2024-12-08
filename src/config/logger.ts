@@ -34,7 +34,7 @@ class Logger {
 
   constructor(options: LoggerOptions) {
     this.level = options.level;
-    this.errorStack = options.errorStack || false;
+    this.errorStack = options.errorStack ?? false;
   }
 
   private log(level: keyof Level, message: unknown, context: Context) {
