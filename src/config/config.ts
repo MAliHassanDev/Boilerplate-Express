@@ -64,6 +64,7 @@ class Config {
     expectedValues?: Array<Env>
   ): T {
     const value = process.env[`${name}_${this.env}`] ?? process.env[name];
+
     if (!value) {
       logger.warn(
         `Env '${name}' not defined. Using default value '${defaultValue}'`,
@@ -71,16 +72,21 @@ class Config {
       );
       return defaultValue;
     }
+
     if (expectedValues) {
       const isValueInExpected = expectedValues.some(
         (expectedValue) => expectedValue === value
       );
-      if (!isValueInExpected)
+
+      if (!isValueInExpected) {
         logger.warn(
           `Value of Env '${name}' is different from the expected value '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
           "Config"
         );
+        return defaultValue;
+      }
     }
+
     return typeof defaultValue === "number"
       ? (parseInt(value, 10) as T)
       : (value as T);
