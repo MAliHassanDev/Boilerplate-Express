@@ -1,7 +1,7 @@
-import express, { Express, Response } from "express";
+import express, { Express } from "express";
 import compression from "compression";
-import apiResponse from "../utils/apiResponse.js";
 import errorHandler from "../middlewares/errorHandler.js";
+import routes from "../routes/routes.js";
 
 const app: Express = express();
 
@@ -18,9 +18,7 @@ app.use(express.json());
 app.use(compression());
 
 // assign routes
-app.all("*", (_, res: Response) => {
-  apiResponse.ok(res, { Time: new Date().toISOString() });
-});
+app.use("/", routes);
 
 // respond to unhandled api errors
 app.use(errorHandler);
