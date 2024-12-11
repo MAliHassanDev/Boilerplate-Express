@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import mongoose, { Mongoose } from "mongoose";
 import { type Express } from "express";
