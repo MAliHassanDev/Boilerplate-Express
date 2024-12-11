@@ -23,6 +23,7 @@ class Server {
     this.serverInstance = await this.getServerInstance();
     const { host, port } = this.serverConfig;
     logger.info(`Server listening at http://${host}:${port}`);
+    return this.serverInstance;
   }
 
   public async shutdown() {
@@ -37,7 +38,7 @@ class Server {
       logger.info("Closing the server...");
       this.serverInstance.close(() => {
         logger.info("Exiting...");
-        process.exit(1);
+        process.exit();
       });
     }
   }
@@ -55,7 +56,7 @@ class Server {
   }
 }
 
-(async () => {
+async function main (){
   let server: Server | null = null;
 
   try {
@@ -88,11 +89,12 @@ class Server {
     if (server) server.shutdown().catch(logger.error);
   });
 
-  process.on(
-    "unhandledRejection",
-    (reason: string,) => {
-      logger.error(`Unhandled Promise: ${reason}.`);
-      if (server) server.shutdown().catch(logger.error);
-    }
-  );
-})().catch(logger.error);
+  process.on("unhandledRejection", (reason: string) => {
+    logger.error(`Unhandled Promise: ${reason}.`);
+    if (server) server.shutdown().catch(logger.error);
+  });
+};
+
+main().catch(logger.error);
+
+export default Server;

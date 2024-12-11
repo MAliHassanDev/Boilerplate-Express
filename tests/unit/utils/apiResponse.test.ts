@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import apiResponse from "../../../src/utils/apiResponse.js";
 import { Response } from "express";
-
+import {describe,expect,beforeEach,test,vi } from "vitest";
 describe("ApiResponse", () => {
   let res: Response;
 
   beforeEach(() => {
     res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis(),
+      json: vi.fn(),
+      status: vi.fn().mockReturnThis(),
     } as unknown as Response;
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Should send 200 with data for 'Ok call", () => {

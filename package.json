@@ -9,7 +9,7 @@
     "preview": "node ./build/server.js",
     "pre-push": "npm run lint && npm run test && npm run build",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -22,17 +22,15 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.9.3",
     "eslint": "^9.16.0",
-    "jest": "^29.7.0",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.17.0"
+    "typescript-eslint": "^8.17.0",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "compression": "^1.7.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "mongoose": "^8.8.2",
-    "ts-jest": "^29.2.5"
+    "mongoose": "^8.8.2"
   }
 }
