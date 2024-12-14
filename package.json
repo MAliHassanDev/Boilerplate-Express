@@ -1,12 +1,12 @@
 {
   "name": "boilerplate-express",
   "version": "1.0.0",
-  "main": "./src/server.js",
+  "main": "./src/index.ts",
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "dev": "tsx watch ./src/server.ts",
-    "preview": "node ./build/server.js",
+    "dev": "tsx watch ./src/index.ts",
+    "preview": "node ./build/index.js",
     "pre-push": "npm run lint && npm run test && npm run build",
     "lint": "eslint .",
     "test": "vitest run"
