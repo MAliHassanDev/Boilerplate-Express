@@ -19,18 +19,16 @@ class Database {
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!Database.instance) {
-      const databaseConfig = config.getDatabaseConfig();
-      Database.instance = new Database(
-        dbConfig ?? databaseConfig,
-        mongooseInstance ?? mongoose
-      );
+      dbConfig = !dbConfig ? config.getDatabaseConfig() : dbConfig;
+      mongooseInstance = !mongooseInstance ? mongoose : mongooseInstance;
+      Database.instance = new Database(dbConfig, mongooseInstance);
     }
     return Database.instance;
   }
 
   public connect = async () => {
     try {
-     await this.mongoose.connect(this.connectionString, {
+      await this.mongoose.connect(this.connectionString, {
         dbName: this.name,
       });
     } catch (err: unknown) {

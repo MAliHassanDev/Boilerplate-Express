@@ -80,7 +80,7 @@ class Config {
 
       if (!isValueInExpected) {
         logger.warn(
-          `Value of Env '${name}' is different from the expected value '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
+          `Value of Env '${name}=${value}' is different from the expected value '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
           "Config"
         );
         return defaultValue;

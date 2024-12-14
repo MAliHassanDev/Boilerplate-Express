@@ -42,4 +42,4 @@ describe("Server", () => {
     await server.shutdown();
     expect(httpServer.close).toHaveBeenCalled();
   });
-});
+ });
