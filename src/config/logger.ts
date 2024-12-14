@@ -1,4 +1,4 @@
-import config, { NodeEnv } from "./config.js";
+import  { NodeEnv } from "./config.js";
 
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 interface Level {
