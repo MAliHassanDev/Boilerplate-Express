@@ -3,7 +3,6 @@ import  { ServerConfig } from "./config/config.js";
 import logger from "./config/logger.js";
 import http from "http";
 import { Express } from "express";
-export type NodeEnv = "DEV" | "TEST" | "PROD";
 
 class Server {
   private serverInstance: http.Server | null = null;

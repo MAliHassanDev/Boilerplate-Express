@@ -1,10 +1,12 @@
+import config, { NodeEnv } from "./config.js";
+
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 interface Level {
   error: 0;
   warn: 1;
   info: 2;
   debug: 3;
-};
+}
 
 type Context = string | null;
 
@@ -41,8 +43,7 @@ class Logger {
     const currentLevelIndex = this.levels[level];
     const setLevelIndex = this.levels[this.level];
 
-    const shouldLog =
-      process.env.NODE_ENV !== "PROD" && currentLevelIndex <= setLevelIndex;
+    const shouldLog = currentLevelIndex <= setLevelIndex;
 
     if (!shouldLog) return;
 
@@ -86,4 +87,23 @@ class Logger {
   };
 }
 
-export default new Logger({ level: "info", errorStack: true });
+function getLogLevel() {
+  const env = process.env.NODE_ENV as NodeEnv;
+  let level: keyof Level;
+  switch (env) {
+    case "development":
+      level = "info";
+      break;
+    case "test":
+      level = "error";
+      break;
+    case "production":
+      level = "warn";
+      break;
+    default:
+      level = "info";
+  }
+  return level;
+}
+
+export default new Logger({ level: getLogLevel(), errorStack: true });

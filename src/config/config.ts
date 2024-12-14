@@ -1,7 +1,8 @@
 import logger from "./logger.js";
 import dotenv from "dotenv";
 import { join } from "path";
-import { NodeEnv } from "../server.js";
+
+export type NodeEnv = "development" | "test" | "production";
 
 dotenv.config({
   path: join(import.meta.dirname, "..", "..", ".env"),
@@ -30,11 +31,11 @@ class Config {
   private static instance: Config;
 
   private constructor() {
-    this.env = this.getEnv<string>("NODE_ENV", "DEV", [
-      "DEV",
-      "PROD",
-      "TEST",
-    ]).toUpperCase() as NodeEnv;
+    this.env = this.getEnv<NodeEnv>("NODE_ENV", "development", [
+      "development",
+      "test",
+      "production",
+    ]);
   }
 
   private initializeServerConfig() {
@@ -63,7 +64,10 @@ class Config {
     defaultValue: T,
     expectedValues?: Array<Env>
   ): T {
-    const value = process.env[`${name}_${this.env}`] ?? process.env[name];
+    const value =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      process.env[`${name}_${(this.env ?? "development").toUpperCase()}`] ??
+      process.env[name];
 
     if (!value) {
       logger.warn(
