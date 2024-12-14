@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsx watch ./src/index.ts",
     "preview": "node ./build/index.js",
-    "pre-push": "npm run lint && npm run test && npm run build",
+    "ci": "npm run lint && npm run test && npm run build",
     "lint": "eslint .",
     "test": "vitest run"
   },
