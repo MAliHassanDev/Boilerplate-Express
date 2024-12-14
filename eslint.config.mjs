@@ -16,17 +16,19 @@ export default tseslint.config(
       },
     },
     rules: {
-      "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],
-      "@typescript-eslint/array-type": ["error", { "default": "generic" }],
-      "@typescript-eslint/no-unused-vars": "warn"
-    }
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        { allowNumber: true },
+      ],
+      "@typescript-eslint/array-type": ["error", { default: "generic" }],
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
   },
   {
-    ignores: ["build/**", "**/*.mjs", "**/*.js","**/*.config.ts"],
+    ignores: ["build/**", "**/*.mjs", "**/*.js", "**/*.config.ts"],
   },
   {
     files: ["**/*.js"],
     extends: [tseslint.configs.disableTypeChecked],
   },
-  
 );

@@ -4,8 +4,7 @@ import logger from "./config/logger.js";
 import Database from "./database/connection.js";
 import Server from "./server.js";
 
-
-async function main (){
+async function main() {
   let server: Server | null = null;
 
   try {
@@ -42,6 +41,6 @@ async function main (){
     logger.error(`Unhandled Promise: ${reason}.`);
     if (server) server.shutdown().catch(logger.error);
   });
-};
+}
 
 main().catch(logger.error);

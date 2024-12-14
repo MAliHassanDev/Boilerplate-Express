@@ -1,5 +1,5 @@
 import Database from "./database/connection.js";
-import  { ServerConfig } from "./config/config.js";
+import { ServerConfig } from "./config/config.js";
 import logger from "./config/logger.js";
 import http from "http";
 import { Express } from "express";
@@ -10,7 +10,7 @@ class Server {
   public constructor(
     private readonly serverConfig: ServerConfig,
     private readonly app: Express,
-    private readonly database?: Database
+    private readonly database?: Database,
   ) {}
 
   public async start() {
@@ -42,17 +42,16 @@ class Server {
   }
 
   private getServerInstance(): Promise<http.Server> {
-    return new Promise((res) => {
+    return new Promise(res => {
       const server = this.app.listen(
         this.serverConfig.port,
         this.serverConfig.host,
         () => {
           res(server);
-        }
+        },
       );
     });
   }
 }
-
 
 export default Server;

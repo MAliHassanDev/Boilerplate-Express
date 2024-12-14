@@ -15,7 +15,7 @@ class Database {
 
   public static getInstance(
     dbConfig?: DatabaseConfig,
-    mongooseInstance?: Mongoose
+    mongooseInstance?: Mongoose,
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!Database.instance) {

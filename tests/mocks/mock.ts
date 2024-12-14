@@ -32,7 +32,7 @@ class Mock {
     return {
       connect: vi
         .fn(async (uri: string, options?: mongoose.ConnectOptions) =>
-          Promise.resolve()
+          Promise.resolve(),
         )
         .mockResolvedValue(),
       connection: {

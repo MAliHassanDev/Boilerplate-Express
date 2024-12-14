@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import apiResponse from "../../../src/utils/apiResponse.js";
 import { Response } from "express";
-import {describe,expect,beforeEach,test,vi } from "vitest";
+import { describe, expect, beforeEach, test, vi } from "vitest";
 describe("ApiResponse", () => {
   let res: Response;
 
@@ -24,7 +24,7 @@ describe("ApiResponse", () => {
         status: "success",
         code: "OK",
         data,
-      })
+      }),
     );
   });
 
@@ -35,7 +35,7 @@ describe("ApiResponse", () => {
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
         code: "NOT_FOUND",
-      })
+      }),
     );
   });
 });

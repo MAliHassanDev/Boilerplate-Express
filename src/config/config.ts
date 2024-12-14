@@ -53,7 +53,7 @@ class Config {
         name: this.getEnv("DATABASE_NAME", "myDb"),
         connectionString: this.getEnv(
           "DATABASE_URI",
-          "mongodb://localhost:27017"
+          "mongodb://localhost:27017",
         ),
       };
     }
@@ -62,7 +62,7 @@ class Config {
   private getEnv<T extends Env>(
     name: string,
     defaultValue: T,
-    expectedValues?: Array<Env>
+    expectedValues?: Array<Env>,
   ): T {
     const value =
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -72,20 +72,20 @@ class Config {
     if (!value) {
       logger.warn(
         `Env '${name}' not defined. Using default value '${defaultValue}'`,
-        "Config"
+        "Config",
       );
       return defaultValue;
     }
 
     if (expectedValues) {
       const isValueInExpected = expectedValues.some(
-        (expectedValue) => expectedValue === value
+        expectedValue => expectedValue === value,
       );
 
       if (!isValueInExpected) {
         logger.warn(
           `Value of Env '${name}=${value}' is different from the expected value '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
-          "Config"
+          "Config",
         );
         return defaultValue;
       }
