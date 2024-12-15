@@ -8,15 +8,11 @@
       "type": "node",
       "request": "launch",
       "name": "Debugging Typescript",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "internalConsoleOptions": "openOnSessionStart",
       "program": "${workspaceFolder}/src/index.ts",
       "preLaunchTask": "npm: build:debug",
-      "outFiles": [
-        "${workspaceFolder}/build/**/*.js"
-      ]
+      "outFiles": ["${workspaceFolder}/build/**/*.js"]
     }
   ]
 }
