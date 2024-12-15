@@ -20,6 +20,8 @@
     "forceConsistentCasingInFileNames": true,
     // source directory for emitted files
     "outDir": "build",
+    // create source map files for the emitted javascript files
+    "sourceMap": true,
     /* ---------------------------------------- Linting ------------------------------- */
     // enables strict type checking
     "strict": true,
