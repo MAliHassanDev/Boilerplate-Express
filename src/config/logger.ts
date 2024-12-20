@@ -1,3 +1,3 @@
-import Logger from "@muhammad.dev/litelogger";
+import Logger from "zaplog";
 
 export default new Logger();
