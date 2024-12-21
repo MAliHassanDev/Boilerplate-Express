@@ -1,6 +1,7 @@
-import logger from "./logger.js";
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import dotenv from "dotenv";
 import { join } from "path";
+import logger from "./logger.js";
 
 export type NodeEnv = "development" | "test" | "production";
 
@@ -20,9 +21,14 @@ export interface DatabaseConfig {
   name: string;
 }
 
+export interface NodeConfig {
+  env: NodeEnv;
+}
+
 interface Configs {
-  serverConfig?: ServerConfig;
-  databaseConfig?: DatabaseConfig;
+  server?: ServerConfig;
+  database?: DatabaseConfig;
+  node?: NodeConfig;
 }
 
 class Config {
@@ -38,25 +44,49 @@ class Config {
     ]);
   }
 
-  private initializeServerConfig() {
-    if (!this.configs.serverConfig) {
-      this.configs.serverConfig = {
-        port: this.getEnv("PORT", 3000),
-        host: this.getEnv("HOST", "127.0.0.1"),
-      };
+  private initializeConfig(name: keyof Configs) {
+    switch (name) {
+      case "server":
+        this.configs[name] = {
+          port: this.getEnv("PORT", 3000),
+          host: this.getEnv("HOST", "127.0.0.1"),
+        };
+        break;
+
+      case "database":
+        this.configs[name] = {
+          name: this.getEnv("DATABASE_NAME", "myDb"),
+          connectionString: this.getEnv(
+            "DATABASE_URI",
+            "mongodb://localhost:27017",
+          ),
+        };
+        break;
+
+      case "node":
+        this.configs[name] = {
+          env: this.env,
+        };
     }
   }
 
-  private initializeDatabaseConfig() {
-    if (!this.configs.databaseConfig) {
-      this.configs.databaseConfig = {
-        name: this.getEnv("DATABASE_NAME", "myDb"),
-        connectionString: this.getEnv(
-          "DATABASE_URI",
-          "mongodb://localhost:27017",
-        ),
-      };
+  public get<K extends keyof Configs>(name: K) {
+    if (!this.configs[name]) {
+      this.initializeConfig(name);
     }
+
+    if (!this.configs[name]) {
+      throw new Error(`${name} config is not defined`);
+    }
+
+    return this.configs[name];
+  }
+
+  public static getInstance(): Config {
+    if (!Config.instance) {
+      Config.instance = new Config();
+    }
+    return Config.instance;
   }
 
   private getEnv<T extends Env>(
@@ -65,7 +95,6 @@ class Config {
     expectedValues?: Array<Env>,
   ): T {
     const value =
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       process.env[`${name}_${(this.env ?? "development").toUpperCase()}`] ??
       process.env[name];
 
@@ -76,15 +105,14 @@ class Config {
       );
       return defaultValue;
     }
-
+    // use default if env value is not one of the expected values
     if (expectedValues) {
       const isValueInExpected = expectedValues.some(
         expectedValue => expectedValue === value,
       );
-
       if (!isValueInExpected) {
         logger.warn(
-          `Value of Env '${name}=${value}' is different from the expected value '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
+          `Value of Env '${name}=${value}' is different from the expected values '${expectedValues.toString()}'.Using Default value '${defaultValue}'`,
           "Config",
         );
         return defaultValue;
@@ -94,36 +122,6 @@ class Config {
     return typeof defaultValue === "number"
       ? (parseInt(value, 10) as T)
       : (value as T);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  private getConfig<T extends Configs[keyof Configs]>(name: keyof Configs): T {
-    const config = this.configs[name];
-    if (!config)
-      throw new Error(`Following config is not initialized: ${name}`);
-    return config as T;
-  }
-
-  public static getInstance(): Config {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!Config.instance) {
-      Config.instance = new Config();
-    }
-    return Config.instance;
-  }
-
-  public getServerConfig(): ServerConfig {
-    this.initializeServerConfig();
-    return this.getConfig("serverConfig");
-  }
-
-  public getDatabaseConfig(): DatabaseConfig {
-    this.initializeDatabaseConfig();
-    return this.getConfig("databaseConfig");
-  }
-
-  public getNodeEnv() {
-    return this.env;
   }
 }
 

@@ -19,7 +19,7 @@ class Database {
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!Database.instance) {
-      dbConfig = !dbConfig ? config.getDatabaseConfig() : dbConfig;
+      dbConfig = !dbConfig ? config.get("database") : dbConfig;
       mongooseInstance = !mongooseInstance ? mongoose : mongooseInstance;
       Database.instance = new Database(dbConfig, mongooseInstance);
     }

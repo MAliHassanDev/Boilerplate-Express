@@ -8,9 +8,9 @@ async function main() {
   let server: Server | null = null;
 
   try {
-    const serverConfig = config.getServerConfig();
+    const serverConfig = config.get("server");
     const database = Database.getInstance();
-    const env = config.getNodeEnv();
+    const { env } = config.get("node");
 
     logger.info(`[------------------ ENV: ${env} ------------------]`);
 
