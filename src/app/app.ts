@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import compression from "compression";
 import errorHandler from "../middlewares/errorHandler.js";
 import routes from "../routes/routes.js";
+import apiResponse from "../middlewares/apiResponose/apiResponse.js";
 
 const app: Express = express();
 
@@ -16,6 +17,9 @@ app.use(express.json());
 
 // compress res body for response
 app.use(compression());
+
+// adds custom api response methods to express response object
+app.use(apiResponse);
 
 // assign routes
 app.use("/", routes);
