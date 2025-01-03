@@ -1,8 +1,6 @@
-
-
 services:
   server:
-    build: 
+    build:
       context: .
     env_file:
       - .env
