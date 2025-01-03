@@ -30,9 +30,16 @@ class Database {
     try {
       await this.mongoose.connect(this.connectionString, {
         dbName: this.name,
+        authSource: "admin",
       });
     } catch (err: unknown) {
-      throw new Error("Database Connection Failed", { cause: err });
+      const reason = err instanceof Error ? err.message : null;
+      throw new Error(
+        `Database Connection Failed. Reason: ${reason ?? "unknown"}`,
+        {
+          cause: err,
+        },
+      );
     }
   };
 

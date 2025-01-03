@@ -3,7 +3,7 @@ class ProjectService {
     const projectInfo = {
       name: "Express-Boilerplate",
       description:
-        "A TypeScript-based Express API template featuring setup with Jest for testing, MongoDB and Mongoose for data management, and ESLint for code quality and  GitHub Actions CI/CD pipeline for automated testing and deployment workflows.",
+        "A TypeScript-based Express API template featuring setup with vitest for testing, MongoDB and Mongoose for data management, and ESLint for code quality and  GitHub Actions CI/CD pipeline for automated testing and deployment workflows.",
       technologies: [
         "express",
         "jest",

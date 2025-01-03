@@ -30,15 +30,6 @@ export type GoneErrorCode = "deleted";
 
 export type InternalServerErrorCode = "internalError";
 
-export type ApiResponseCode =
-  | "UNAUTHORIZED"
-  | "NOT_FOUND"
-  | "BAD_REQUEST"
-  | "MOVED_PERMANENTLY"
-  | "OK"
-  | "CREATED"
-  | "INTERNAL_SERVER_ERROR";
-
 interface ApiResponseMessages {
   created: Record<CreatedSuccessCode, string>;
   ok: Record<OkSuccessCode, string>;
